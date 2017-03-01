@@ -1,0 +1,183 @@
+---
+title: "EEB177-exercise-8"
+author: "Matthew Muia"
+date: "March 1, 2017"
+output: html_document
+---
+
+## Exploring the Cocoli Database
+
+```{r}
+cocoli_dat <- read.table("~/Desktop/eeb-177/class-assignments/classwork-21-Feb/cocoli.txt", header = TRUE)
+head(cocoli_dat)
+str(cocoli_dat)
+
+View(cocoli_dat)
+
+sizes_in_1994 <- cocoli_dat$dbh1
+names(sizes_in_1994) <- cocoli_dat$tag
+sizes_in_1994[1]
+
+sizes_in_1997 <- cocoli_dat$dbh2
+names(sizes_in_1997) <- cocoli_dat$tag
+
+sizes_in_1998 <- cocoli_dat$dbh3
+names(sizes_in_1998) <- cocoli_dat$tag
+
+#find all instances of dbh = 171
+sizes_in_1994 == 171
+
+#we waant to know the fate of all trees that began 1994 with dbh 171
+#first, make a list of trees that were 171 dbh in 1994:
+trees_171_1994 = which(sizes_in_1994 == 171)
+trees_171_1994
+
+sizes_in_1997[trees_171_1994]
+
+#Calculate RGR between 1997-1994
+yearly_RGR_1 = ((cocoli_dat$dbh2 - cocoli_dat$dbh1)/(cocoli_dat$dbh1))/3
+
+#add the RGR column
+cocoli_dat$rgr1 = yearly_RGR_1
+```
+
+
+## Plots
+
+```{r}
+#make histograms with hist()
+#make barplots with barplot()
+#boxplots with boxplot()
+#scatter plot with plot()
+
+hist(cocoli_dat$dbh1, xlab = "DBH in 1994 (mm)", main = "Distributions of sizes in 1994", col = "blue", xlim = c(0, 2000))
+```
+
+
+```{r}
+library(ggplot2)
+
+ggplot(cocoli_dat) +geom_histogram(aes(dbh1)) + ggtitle("Distribution of sizes in 1994") + geom_histogram(aes(dbh2))
+
+```
+
+
+## Intro to R graphics with ggplot2
+
+```{r}
+housing <- read.csv("Rgraphics/dataSets/landdata-states.csv")
+head(housing[1:5])
+
+# basic histogram
+hist(housing$Home.Value)
+
+# ggplot2 histogram
+library(ggplot2)
+ggplot(housing, aes(x = Home.Value)) + geom_histogram()
+
+# basic colored scatter plot
+plot(Home.Value ~ Date,
+     data=subset(housing, State == "MA"))
+points(Home.Value ~ Date, col="red",
+       data=subset(housing, State == "TX"))
+legend(1975, 400000,
+       c("MA", "TX"), title="State",
+       col=c("black", "red"),
+       pch=c(1, 1))
+
+# ggplot2 colored scatter plot
+ggplot(subset(housing, State %in% c("MA", "TX")),
+       aes(x=Date,
+           y=Home.Value,
+           color=State))+
+  geom_point()
+
+# use aes() for asthetics mapping, make thing look nice
+
+# use geom() to change geometric objects, types of marks put onto the plot. Plot must have at least 1 geom.
+
+# scatter plot
+hp2001Q1 <- subset(housing, Date == 2001.25) 
+ggplot(hp2001Q1,
+       aes(y = Structure.Cost, x = Land.Value)) +
+  geom_point()
+
+# scatter plot with log
+ggplot(hp2001Q1,
+       aes(y = Structure.Cost, x = log(Land.Value))) +
+  geom_point()
+
+# scatter plot with trend-line
+hp2001Q1$pred.SC <- predict(lm(Structure.Cost ~ log(Land.Value), data = hp2001Q1))
+
+p1 <- ggplot(hp2001Q1, aes(x = log(Land.Value), y = Structure.Cost))
+
+p1 + geom_point(aes(color = Home.Value)) +
+  geom_line(aes(y = pred.SC))
+
+#making the trend-line smooth
+p1 +
+  geom_point(aes(color = Home.Value)) +
+  geom_smooth()
+
+# adding text
+p1 + 
+  geom_text(aes(label=State), size = 3)
+
+# install package and graph data as text with points
+install.packages("ggrepel")
+library("ggrepel")
+p1 + 
+  geom_point() + 
+  geom_text_repel(aes(label=State), size = 3)
+
+# adding different shapes for data points
+p1 +
+  geom_point(aes(color=Home.Value, shape = region))
+```
+
+
+### Exercise 1
+
+```{r}
+dat <- read.csv("Rgraphics/dataSets/EconomistData.csv")
+head(dat)
+
+ggplot(dat, aes(x = CPI, y = HDI, size = HDI.Rank)) + geom_point(color = "blue")
+```
+
+### Back to Practice
+
+```{r}
+
+```
+
+### Exercise 2
+
+```{r}
+
+```
+
+### Back to Practice
+
+```{r}
+
+```
+
+### Exercise 3
+
+```{r}
+
+```
+
+### Back to Practice
+
+```{r}
+
+```
+
+### Putting it All Together
+
+```{r}
+
+```

@@ -2,7 +2,7 @@
 title: "EEB177-exercise-8"
 author: "Matthew Muia"
 date: "March 1, 2017"
-output: html_document
+output: md_document
 ---
 
 ## Exploring the Cocoli Database
@@ -12,7 +12,7 @@ cocoli_dat <- read.table("~/Desktop/eeb-177/class-assignments/classwork-21-Feb/c
 head(cocoli_dat)
 str(cocoli_dat)
 
-View(cocoli_dat)
+#View(cocoli_dat)
 
 sizes_in_1994 <- cocoli_dat$dbh1
 names(sizes_in_1994) <- cocoli_dat$tag
@@ -65,6 +65,7 @@ ggplot(cocoli_dat) +geom_histogram(aes(dbh1)) + ggtitle("Distribution of sizes i
 ## Intro to R graphics with ggplot2
 
 ```{r}
+
 housing <- read.csv("Rgraphics/dataSets/landdata-states.csv")
 head(housing[1:5])
 
@@ -125,7 +126,7 @@ p1 +
   geom_text(aes(label=State), size = 3)
 
 # install package and graph data as text with points
-install.packages("ggrepel")
+#install.packages("ggrepel")
 library("ggrepel")
 p1 + 
   geom_point() + 
@@ -172,7 +173,7 @@ dat <- read.csv("Rgraphics/dataSets/EconomistData.csv")
 ggplot(dat, aes(x = CPI, y = HDI, size = HDI.Rank)) + geom_point(color = "blue") + geom_smooth()
 
 # 3
-ggplot(dat, aes(x = CPI, y = HDI, size = HDI.Rank)) + geom_point(color = "blue") + geom_smooth()
+ggplot(dat, aes(x = CPI, y = HDI, size = HDI.Rank)) + geom_point(color = "blue") + geom_smooth(method=lm)
 
 # 4
 ggplot(dat, aes(x = CPI, y = HDI, size = HDI.Rank)) + geom_point(color = "blue") + geom_line()
@@ -224,11 +225,12 @@ p4 +
 ### Exercise 3
 
 ```{r}
-# 1
+dat <- read.csv("Rgraphics/dataSets/EconomistData.csv")
+ggplot(dat, aes(x = CPI, y = HDI, size = HDI.Rank)) + geom_point(aes(color = HDI),
+                       alpha = 0.5,
+                       size = 1.5,
+                       position = position_jitter(width = 0.25, height = 0)) + scale_y_discrete(name="Human Development Index") + scale_x_discrete(name="Corruption Perception Index")
 
-# 2
-
-# 3
 ```
 
 ### Back to Practice
@@ -266,5 +268,6 @@ p5 + theme_new
 ### Putting it All Together
 
 ```{r}
-
+ggplot(dat, aes(x = CPI, y = HDI, color = Region)) + ggtitle("Corruption and Human Developement") + geom_point() + 
+  geom_text_repel(aes(label=Country), size = 1.5) + geom_smooth(color = "red", se = F) + scale_x_continuous(name = "Corruption Perception Index") + scale_y_continuous(name = "Human Development Index")
 ```
